@@ -4,30 +4,45 @@ A minimal Retrieval-Augmented Generation (RAG) system for press releases.
 
 ## Project Structure
 
-```
-press_release_rag/
-├── src/                    # Source code
-│   ├── __init__.py
-│   ├── data_ingestion.py   # Document loading and preprocessing
-│   ├── embedding.py        # Document embedding and vector operations
-│   ├── retrieval.py        # Document retrieval and similarity search
-│   ├── generation.py       # Text generation with retrieved context
-│   └── rag_pipeline.py     # Main RAG pipeline orchestration
-├── data/                   # Data storage
-│   ├── raw/               # Raw input documents
-│   └── processed/         # Processed and indexed documents
-├── config/                # Configuration files
-│   └── config.py          # System configuration settings
-└── tests/                 # Test suite
-    ├── __init__.py
-    ├── test_data_ingestion.py
-    └── test_rag_pipeline.py
-```
-
-## Setup
-
-TODO: Add setup instructions
-
-## Usage
-
-TODO: Add usage instructions
+press_release_rag
+├─ pyproject.toml
+├─ README.md
+├─ .env.example
+├─ Makefile
+├─ docker-compose.yml
+│
+├─ data/
+│  ├─ raw/                  # your original .txt / .jsonl / .csv
+│  ├─ interim/              # chunked/normalized text (optional)
+│  └─ vectorstore/          # FAISS index files (*.faiss, *.pkl)
+│
+├─ src/
+│  ├─ config/
+│  │  └─ settings.py        # Pydantic settings (models, paths, params)
+│  ├─ models/
+│  │  └─ schemas.py         # Pydantic models for docs, chunks, query, answer
+│  ├─ ingest/
+│  │  ├─ loaders.py         # read .txt/.jsonl, split into docs
+│  │  ├─ chunkers.py        # LangChain text splitters (chars/tokens)
+│  │  └─ build_index.py     # create/update FAISS index with Ollama embeddings
+│  ├─ retrieval/
+│  │  ├─ retriever.py       # FAISS retriever factory (k, filters)
+│  │  └─ prompt.py          # system/user templates for RAG
+│  ├─ llm/
+│  │  ├─ chat.py            # Chat model (Ollama), temperature, tools
+│  │  └─ embeddings.py      # Embedding model (Ollama)
+│  ├─ rag/
+│  │  └─ chain.py           # build RAG chain (retrieve → condense → answer)
+│  ├─ eval/
+│  │  ├─ goldsets.py        # small hand-made Q/A for smoke tests
+│  │  └─ evaluate.py        # latency@k, hit@k, context precision/len
+│  └─ utils/
+│     └─ io.py              # small helpers (save/load, path utils, timing)
+│
+├─ app/
+│  └─ streamlit_app.py      # simple UI: ask question, see sources & answer
+│
+└─ scripts/
+   ├─ ingest.py             # CLI: build/refresh index
+   ├─ query.py              # CLI: one-off question from terminal
+   └─ dump_sources.py       # debug: inspect top-k 
