@@ -5,7 +5,6 @@ from src.ingest.chunkers import chunk_documents
 from src.ingest.build_index import build_faiss
 
 def main():
-    # Put your simulated file here, or pass path via env/argparse
     raw_paths = list(settings.data_raw_dir.glob("*.txt"))
     assert raw_paths, f"No .txt files in {settings.data_raw_dir}"
     docs = []

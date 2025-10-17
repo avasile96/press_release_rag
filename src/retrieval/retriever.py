@@ -13,3 +13,4 @@ def get_retriever():
         allow_dangerous_deserialization=True
     )
     return vs.as_retriever(search_kwargs={"k": settings.top_k})
+

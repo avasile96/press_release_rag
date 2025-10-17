@@ -14,6 +14,7 @@ def build_faiss(chunks: list) -> None:
         LCDocument(page_content=c.text, metadata={"doc_id": c.doc_id, **c.meta})
         for c in chunks
     ]
-    vs = FAISS.from_documents(lc_docs, emb)
+    vs = FAISS.from_documents(lc_docs, emb, normalize_L2=True) 
     settings.vectorstore_dir.mkdir(parents=True, exist_ok=True)
     vs.save_local(str(settings.vectorstore_dir))
+

@@ -5,28 +5,23 @@ from src.retrieval.retriever import get_retriever
 from src.retrieval.prompt import SYSTEM_PROMPT
 from src.llm.chat import get_chat
 
-"""
-“retrieve → stuff → generate” (simple, dependable).
-"""
-
-def format_docs(docs):
-    return "\n\n".join(
-        f"[{i}] {d.metadata.get('doc_id')} — {d.page_content}"
-        for i, d in enumerate(docs, 1)
-    )
+def _format_docs(docs):
+    out = []
+    for i, d in enumerate(docs, 1):
+        title = d.metadata.get("title") or d.metadata.get("doc_id", "")
+        out.append(f"[{i}] {title} (`{d.metadata.get('doc_id')}`) — {d.page_content}")
+    return "\n\n".join(out)
 
 def build_rag_chain():
     retriever = get_retriever()
     chat = get_chat()
-
     prompt = ChatPromptTemplate.from_messages([
         ("system", SYSTEM_PROMPT),
         ("human", "Question: {question}\n\nContext:\n{context}\n\nAnswer:")
     ])
-
     chain = (
         {"docs": retriever, "question": RunnablePassthrough()}
-        | RunnableMap({"context": lambda x: format_docs(x["docs"]), "question": lambda x: x["question"]})
+        | RunnableMap({"context": lambda x: _format_docs(x["docs"]), "question": lambda x: x["question"]})
         | prompt
         | chat
         | StrOutputParser()

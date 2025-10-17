@@ -29,8 +29,10 @@ data/raw/*
 
 # Vector database
 *.db
-chroma_db/
 
 # Logs
 *.log
 logs/
+
+# Notes
+notes.txt
