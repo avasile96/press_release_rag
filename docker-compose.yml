@@ -1,5 +1,9 @@
 services:
   ollama:
+    environment:
+      OLLAMA_KEEP_ALIVE: "30s"        # unload model ~30s after last use
+      OLLAMA_MAX_LOADED_MODELS: "1"   # at most one model resident
+      OLLAMA_NUM_PARALLEL: "1"        # (optional) keep memory low
     image: ollama/ollama:latest
     # Remove this line to avoid the 11434 conflict on your host:
     # ports: ["11434:11434"]
