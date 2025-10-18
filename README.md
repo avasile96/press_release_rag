@@ -1,9 +1,41 @@
-# Press Release RAG Project
+# Press Release RAG
 
-A minimal Retrieval-Augmented Generation (RAG) system for press releases.
+A minimal Retrieval-Augmented Generation (RAG) system for querying press releases using LangChain, FAISS, Ollama, and Streamlit. The project demonstrates end-to-end ingestion, semantic retrieval, and grounded answering with cited context.
 
-## Project Structure
+---
 
+## Features
+
+- Local LLM inference via Ollama (chat and embeddings).
+- FAISS vector store with cosine similarity.
+- Modular pipeline: ingest → retrieve → generate.
+- Streamlit interface that displays answers and retrieved sources.
+- Runs natively or with Docker Compose; models and indexes persist via volumes.
+
+---
+
+## Architecture
+
+1. Ingestion: plaintext press releases are split into documents/chunks and embedded with Ollama embeddings.
+2. Indexing: embeddings are stored in a FAISS index on disk.
+3. Retrieval: a LangChain retriever fetches top-k chunks for a query.
+4. Generation: an Ollama chat model answers strictly from retrieved context; citations are shown in the UI.
+
+---
+
+## Tech Stack
+
+- Python 3.11+  
+- LangChain (chains, retrievers)  
+- FAISS-CPU (vector store)  
+- Ollama (LLM/chat: `llama3`, embeddings: `nomic-embed-text`)  
+- Streamlit (web UI)
+
+---
+
+## Repository Structure
+
+```text
 press_release_rag
 ├─ pyproject.toml
 ├─ README.md
@@ -12,37 +44,37 @@ press_release_rag
 ├─ docker-compose.yml
 │
 ├─ data/
-│  ├─ raw/                  # your original .txt / .jsonl / .csv
-│  ├─ interim/              # chunked/normalized text (optional)
+│  ├─ raw/                  # original .txt/.jsonl/.csv
+│  ├─ interim/              # optional normalized/chunked text
 │  └─ vectorstore/          # FAISS index files (*.faiss, *.pkl)
 │
 ├─ src/
 │  ├─ config/
-│  │  └─ settings.py        # Pydantic settings (models, paths, params)
+│  │  └─ settings.py        # Pydantic settings (paths, model names, params)
 │  ├─ models/
-│  │  └─ schemas.py         # Pydantic models for docs, chunks, query, answer
+│  │  └─ schemas.py         # Pydantic schemas for docs/chunks/query/answer
 │  ├─ ingest/
-│  │  ├─ loaders.py         # read .txt/.jsonl, split into docs
-│  │  ├─ chunkers.py        # LangChain text splitters (chars/tokens)
-│  │  └─ build_index.py     # create/update FAISS index with Ollama embeddings
+│  │  ├─ loaders.py         # plaintext/jsonl readers
+│  │  ├─ chunkers.py        # text splitting (token/char)
+│  │  └─ build_index.py     # FAISS construction with embeddings
 │  ├─ retrieval/
 │  │  ├─ retriever.py       # FAISS retriever factory (k, filters)
-│  │  └─ prompt.py          # system/user templates for RAG
+│  │  └─ prompt.py          # system/user prompt templates
 │  ├─ llm/
-│  │  ├─ chat.py            # Chat model (Ollama), temperature, tools
-│  │  └─ embeddings.py      # Embedding model (Ollama)
+│  │  ├─ chat.py            # Chat model wrapper (Ollama)
+│  │  └─ embeddings.py      # Embedding wrapper (Ollama)
 │  ├─ rag/
-│  │  └─ chain.py           # build RAG chain (retrieve → condense → answer)
+│  │  └─ chain.py           # RAG chain (retrieve → format → generate)
 │  ├─ eval/
-│  │  ├─ goldsets.py        # small hand-made Q/A for smoke tests
-│  │  └─ evaluate.py        # latency@k, hit@k, context precision/len
+│  │  ├─ goldsets.py        # small smoke-test Q/A sets
+│  │  └─ evaluate.py        # latency@k, hit@k, context metrics
 │  └─ utils/
-│     └─ io.py              # small helpers (save/load, path utils, timing)
+│     └─ io.py              # helpers (paths, timing, I/O)
 │
 ├─ app/
-│  └─ streamlit_app.py      # simple UI: ask question, see sources & answer
+│  └─ streamlit_app.py      # UI: question input, answer, sources
 │
 └─ scripts/
-   ├─ ingest.py             # CLI: build/refresh index
-   ├─ query.py              # CLI: one-off question from terminal
-   └─ dump_sources.py       # debug: inspect top-k 
+   ├─ ingest.py             # build/refresh FAISS index
+   ├─ query.py              # one-off terminal query
+   └─ dump_sources.py       # inspect top-k retrieved chunks
