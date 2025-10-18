@@ -8,6 +8,22 @@ Create the FAISS store from chunks
 """
 
 def build_faiss(chunks: list) -> None:
+    """Build and persist a FAISS vector store from chunks.
+
+    Parameters
+    ----------
+    chunks : list
+        An iterable of chunk-like objects with attributes `text`, `doc_id`,
+        and `meta` (metadata mapping). The function will compute embeddings
+        for each chunk, create a FAISS vector store and save it to the
+        configured `vectorstore_dir`.
+
+    Notes
+    -----
+    This function uses `get_embeddings()` to obtain an embeddings object
+    compatible with the LangChain FAISS wrapper and saves the index locally.
+    """
+
     emb = get_embeddings()
 
     texts = [c.text for c in chunks]

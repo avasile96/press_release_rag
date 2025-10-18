@@ -6,6 +6,21 @@ from src.retrieval.prompt import SYSTEM_PROMPT
 from src.llm.chat import get_chat
 
 def _format_docs(docs):
+    """Format retrieved documents into a human-readable context string.
+
+    Parameters
+    ----------
+    docs : Iterable
+        Iterable of document-like objects returned by the retriever. Each
+        item is expected to have `metadata` and `page_content` attributes.
+
+    Returns
+    -------
+    str
+        A single string that enumerates documents with their titles and
+        snippets, suitable for insertion into a prompt.
+    """
+
     out = []
     for i, d in enumerate(docs, 1):
         title = d.metadata.get("title") or d.metadata.get("doc_id", "")
@@ -13,6 +28,19 @@ def _format_docs(docs):
     return "\n\n".join(out)
 
 def build_rag_chain():
+    """Build a retrieval-augmented generation (RAG) runnable chain.
+
+    The returned chain composes a retriever, prompt template, and chat
+    model into a runnable pipeline that accepts a `question` and returns a
+    parsed string answer.
+
+    Returns
+    -------
+    Runnable
+        A LangChain runnable pipeline ready to be invoked with inputs such
+        as `{"question": "..."}`.
+    """
+
     retriever = get_retriever()
     chat = get_chat()
     prompt = ChatPromptTemplate.from_messages([

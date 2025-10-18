@@ -3,6 +3,22 @@ from src.models.schemas import Document, Chunk
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 def chunk_documents(docs: list[Document]) -> list[Chunk]:
+    """Split documents into chunks suitable for embedding and indexing.
+
+    Parameters
+    ----------
+    docs : list[Document]
+        List of Document objects to split into smaller chunks. Uses
+        `RecursiveCharacterTextSplitter` and the `chunk_size` and
+        `chunk_overlap` values from configuration.
+
+    Returns
+    -------
+    list[Chunk]
+        A list of Chunk objects, each containing `doc_id`, `chunk_id`, `text`,
+        and `meta` fields derived from the source Document.
+    """
+
     chunks: list[Chunk] = []
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=settings.chunk_size,

@@ -5,6 +5,13 @@ from src.ingest.chunkers import chunk_documents
 from src.ingest.build_index import build_faiss
 
 def main():
+    """Main CLI entrypoint for ingesting raw text files into FAISS.
+
+    The function finds all `.txt` files in the configured `data_raw_dir`,
+    converts them to Document objects, chunks them, builds a FAISS index,
+    and persists the index to the configured `vectorstore_dir`.
+    """
+
     raw_paths = list(settings.data_raw_dir.glob("*.txt"))
     assert raw_paths, f"No .txt files in {settings.data_raw_dir}"
     docs = []
