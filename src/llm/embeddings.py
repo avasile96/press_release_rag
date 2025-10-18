@@ -2,4 +2,7 @@ from langchain_ollama import OllamaEmbeddings
 from src.config.settings import settings
 
 def get_embeddings():
-    return OllamaEmbeddings(model=settings.ollama_embed_model)
+    return OllamaEmbeddings(
+        model=settings.ollama_embed_model,
+        base_url=settings.ollama_host,  # <- important
+    )

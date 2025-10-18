@@ -1,8 +1,35 @@
 services:
   ollama:
     image: ollama/ollama:latest
-    ports: ["11434:11434"]
+    # Remove this line to avoid the 11434 conflict on your host:
+    # ports: ["11434:11434"]
     volumes:
       - ollama:/root/.ollama
+    # Replace curl healthcheck with an ollama CLI call (no curl needed)
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  app:
+    build: .
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: http://ollama:11434   # keep this! internal DNS name
+      OLLAMA_CHAT_MODEL: llama3
+      OLLAMA_EMBED_MODEL: nomic-embed-text
+      CHUNK_SIZE: "1000"
+      CHUNK_OVERLAP: "150"
+      TOP_K: "6"
+      TEMPERATURE: "0.2"
+      MAX_TOKENS: "1024"
+    ports: ["8501:8501"]
+    volumes:
+      - ./data:/app/data
+
 volumes:
   ollama:

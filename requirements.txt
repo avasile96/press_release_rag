@@ -1,6 +1,7 @@
-# Project dependencies will be listed here
-# Example:
-# langchain>=0.0.300
-# openai>=1.0.0
-# chromadb>=0.4.0
-# python-dotenv>=1.0.0
+pydantic>=2
+streamlit
+faiss-cpu
+langchain>=0.2
+langchain-community>=0.2
+langchain-text-splitters>=0.2
+langchain-ollama

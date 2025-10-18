@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     vectorstore_dir: Path = Path("data/vectorstore")
 
     # Models (override in .env)
+    ollama_host: str = "http://localhost:11434"
     ollama_chat_model: str = "llama3"
     ollama_embed_model: str = "nomic-embed-text"
 
