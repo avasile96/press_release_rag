@@ -14,5 +14,5 @@ def get_embeddings():
 
     return OllamaEmbeddings(
         model=settings.ollama_embed_model,
-        base_url=settings.ollama_host,  # <- important
+        base_url=settings.ollama_host,
     )
