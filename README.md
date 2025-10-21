@@ -38,47 +38,60 @@ A minimal Retrieval-Augmented Generation (RAG) system for querying press release
 
 ```text
 press_release_rag
-├─ pyproject.toml
-├─ README.md
-├─ .env.example
-├─ Makefile
+├─ Dockerfile
 ├─ docker-compose.yml
-│
-├─ data/
-│  ├─ raw/                  # original .txt/.jsonl/.csv
-│  ├─ interim/              # optional normalized/chunked text
-│  └─ vectorstore/          # FAISS index files (*.faiss, *.pkl)
-│
-├─ src/
-│  ├─ config/
-│  │  └─ settings.py        # Pydantic settings (paths, model names, params)
-│  ├─ models/
-│  │  └─ schemas.py         # Pydantic schemas for docs/chunks/query/answer
-│  ├─ ingest/
-│  │  ├─ loaders.py         # plaintext/jsonl readers
-│  │  ├─ chunkers.py        # text splitting (token/char)
-│  │  └─ build_index.py     # FAISS construction with embeddings
-│  ├─ retrieval/
-│  │  ├─ retriever.py       # FAISS retriever factory (k, filters)
-│  │  └─ prompt.py          # system/user prompt templates
-│  ├─ llm/
-│  │  ├─ chat.py            # Chat model wrapper (Ollama)
-│  │  └─ embeddings.py      # Embedding wrapper (Ollama)
-│  ├─ rag/
-│  │  └─ chain.py           # RAG chain (retrieve → format → generate)
-│  ├─ eval/
-│  │  ├─ goldsets.py        # small smoke-test Q/A sets
-│  │  └─ evaluate.py        # latency@k, hit@k, context metrics
-│  └─ utils/
-│     └─ io.py              # helpers (paths, timing, I/O)
+├─ Makefile
+├─ pyproject.toml
+├─ requirements.txt
+├─ README.md
 │
 ├─ app/
-│  └─ streamlit_app.py      # UI: question input, answer, sources
+│  └─ streamlit_app.py              # Streamlit UI (question input, answer, sources)
 │
-└─ scripts/
-   ├─ ingest.py             # build/refresh FAISS index
-   ├─ query.py              # one-off terminal query
-   └─ dump_sources.py       # inspect top-k retrieved chunks
+├─ data/
+│  ├─ raw/
+│  │  └─ press_releases.txt         # example/plaintext corpus
+│  └─ vectorstore/
+│     ├─ index.faiss                # FAISS index file
+│     └─ index.pkl                  # FAISS metadata / mapping
+│
+├─ docs/
+│  ├─ eval_interpretation.txt
+│  └─ faiss_index_decision_tree.jpg
+│
+├─ eval/
+│  └─ ragas_eval.py                 # evaluation harness (BLEU/ROUGE/Faithfulness)
+│
+├─ ragas_eval_out/                  # evaluation outputs (generated)
+│  ├─ aggregate_scores.json
+│  ├─ per_sample_scores.csv
+│  └─ predictions.jsonl
+│
+├─ scripts/
+│  ├─ __init__.py
+│  ├─ ingest.py                     # build/refresh FAISS index (entrypoint)
+│  ├─ paragraph_stats.py            # helpers / stats over chunks/corpus
+│  └─ query.py                      # small CLI query helper
+│
+└─ src/
+  ├─ __init__.py
+  ├─ config/
+  │  └─ settings.py                # Pydantic settings (paths, model names, params)
+  ├─ models/
+  │  └─ schemas.py                 # Pydantic schemas for docs/chunks/query/answer
+  ├─ ingest/
+  │  ├─ build_index.py             # FAISS construction with embeddings
+  │  ├─ chunkers.py                # text splitting (token/char)
+  │  └─ loaders.py                 # plaintext/jsonl readers
+  ├─ llm/
+  │  ├─ chat.py                    # Chat model wrapper (Ollama)
+  │  └─ embeddings.py              # Embedding wrapper (Ollama)
+  ├─ rag/
+  │  └─ chain.py                   # RAG chain (retrieve → format → generate)
+  └─ retrieval/
+    ├─ retriever.py               # FAISS retriever factory (top k)
+    └─ prompt.py                  # system/user prompt templates
+
 ```
 
 ---
