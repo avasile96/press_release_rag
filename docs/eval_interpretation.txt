@@ -1,0 +1,12 @@
+The RAG system is getting the facts right and staying on-topic, but it doesn’t echo the reference wording.
+
+Faithfulness ≈ 0.85 (high) – RAGAS’ faithfulness judges whether the answer’s claims are supported by the provided context; ~0.85 suggests limited hallucination. RAGAS reports strong accuracy on faithfulness compared to human judgments. 
+
+AnswerRel ≈ 0.994 (very high) – RAGAS’ answer-relevancy measures how well the answer addresses the question; near-1.0 means the model stays tightly focused. (This metric uses the LLM + embeddings to score semantic alignment.)
+
+ROUGE-L ≈ 0.22 (low–moderate) – ROUGE is recall-oriented n-gram/sequence overlap with the reference; low–mid values are normal for abstractive paraphrasing that covers the same ideas with different wording. ROUGE-L tracks longest common subsequence (order-aware overlap). 
+
+BLEU ≈ 0.084 (low) – BLEU is precision-oriented n-gram match with a brevity penalty; paraphrases or shorter, concise answers get penalized even when correct. Low BLEU alongside high faithfulness/relevancy usually means “factually right but phrased differently.”
+
+How to improve BLEU/ROUGE?
+Make the model more extractive: lower temperature, instruct it to quote phrases from context, and cap length. BLEU/ROUGE were designed for surface-form similarity (MT/summarization), so they drop when wording diverges—even if meaning is correct. 

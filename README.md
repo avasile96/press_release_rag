@@ -9,6 +9,7 @@ A minimal Retrieval-Augmented Generation (RAG) system for querying press release
 - Local LLM inference via Ollama (chat and embeddings)
 - FAISS vector store with cosine similarity
 - Modular pipeline: ingest → retrieve → generate
+- Evaluation pipeline: BLEU, ROUGE-L + Faithfulness, Relevancy
 - Streamlit interface that displays answers and retrieved sources
 - Native run or Docker Compose; models and indexes persist via volumes
 
