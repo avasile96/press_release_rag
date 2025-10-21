@@ -1,0 +1,7 @@
+{
+  "samples": 2,
+  "BLEU": 0.075,
+  "ROUGE-L": 0.217,
+  "faithfulness_avg": 0.7143,
+  "answer_relevancy_avg": 0.9514
+}

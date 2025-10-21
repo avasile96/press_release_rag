@@ -1,0 +1,16 @@
+question,answer,contexts,faithfulness,answer_relevancy
+What is the impact of encoding the input prompt on inference speed in generative inference?,"The impact of encoding the input prompt on inference speed in generative inference is that it can significantly improve inference speed, particularly when processing large batches of data during training or non-interactive inference. This is because encoding allows each layer to process a larger number of tokens at once, reducing the number of times the layer needs to be loaded from RAM and improving overall throughput.
+
+In contrast, interactive inference (e.g. chat assistants) may see slower performance due to the need for offloading, which can introduce additional latency and slow down the inference process.
+
+The generative inference workload typically consists of two main components:
+
+1. **Tokenization**: breaking down input text into individual tokens (e.g. words or characters)
+2. **Encoding**: converting each token into a numerical representation that can be processed by the model","['- This technique works particularly well when processing large batches of data, during train-\ning Pudipeddi et al. (2020); Ren et al. (2021) or large-batch non-interactive inference Aminabadi et al.\n(2022); Sheng et al. (2023), where each layer processes a lot of tokens each time the layer is loaded\nfrom RAM.\n- In turn, when doing interactive inference (e.g. as a chat assistants), offloading works\nsignificantly slower than on-device inference.\n- The generative inference workload consists of two ']",0.42857142857142855,0.9885426899354184
+How does generating tokens affect the inference speed in generative inference?,"Generating tokens can significantly affect the inference speed in generative inference, especially during interactive inference.
+
+When generating tokens, each layer of the model needs to process a large number of tokens, which can lead to increased computational complexity and slower inference times. This is particularly true for interactive inference scenarios, such as chat assistants, where the model needs to generate tokens on-the-fly in response to user input.
+
+In contrast, during training or large-batch non-interactive inference, the model can process a large batch of data at once, which can lead to more efficient computation and faster inference times. However, when generating tokens interactively, the model needs to process each token individually, leading to slower inference speeds.
+
+Therefore, in interactive inference scenarios, offloading the generation of tokens to a cloud-based or edge-based infrastructure can be beneficial for improving inference speed.","['- This technique works particularly well when processing large batches of data, during train-\ning Pudipeddi et al. (2020); Ren et al. (2021) or large-batch non-interactive inference Aminabadi et al.\n(2022); Sheng et al. (2023), where each layer processes a lot of tokens each time the layer is loaded\nfrom RAM.\n- In turn, when doing interactive inference (e.g. as a chat assistants), offloading works\nsignificantly slower than on-device inference. This is because interactive inference generates toke']",1.0,0.9142293914441689
