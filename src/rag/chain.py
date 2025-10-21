@@ -17,14 +17,14 @@ def _format_docs(docs):
     Returns
     -------
     str
-        A single string that enumerates documents with their titles and
+        A single string that enumerates documents with their
         snippets, suitable for insertion into a prompt.
     """
 
     out = []
     for i, d in enumerate(docs, 1):
-        title = d.metadata.get("title") or d.metadata.get("doc_id", "")
-        out.append(f"[{i}] {title} (`{d.metadata.get('doc_id')}`) — {d.page_content}")
+        text = d.metadata.get("text") or d.metadata.get("doc_id", "")
+        out.append(f"[{i}] {text} (`{d.metadata.get('doc_id')}`) — {d.page_content}")
     return "\n\n".join(out)
 
 def build_rag_chain():

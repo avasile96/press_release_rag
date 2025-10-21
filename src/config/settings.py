@@ -18,8 +18,9 @@ class Settings(BaseSettings):
     ollama_embed_model: str = "nomic-embed-text"
 
     # Chunking
-    chunk_size: int = 1000
-    chunk_overlap: int = 150
+    chunk_size: int = 100          
+    chunk_overlap: int = 10        
+    short_entry_words: int = 57  
 
     # Retrieval
     top_k: int = 4

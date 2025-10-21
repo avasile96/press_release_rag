@@ -19,7 +19,7 @@ if st.button("Search") and question.strip():
     with st.expander("Show retrieved context"):
         docs = retriever.invoke(question)
         for d in docs:
-            title = d.metadata.get("title") or d.metadata.get("doc_id","?")
-            st.markdown(f"**{title}**  \n`{d.metadata.get('doc_id','?')}` — {d.metadata.get('source','')}")
+            text = d.metadata.get("text") or d.metadata.get("doc_id","?")
+            st.markdown(f"**{text}**  — {d.metadata.get('source','')}")
             st.write(d.page_content)
             st.divider()

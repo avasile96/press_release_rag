@@ -25,11 +25,38 @@ def chunk_documents(docs: list[Document]) -> list[Chunk]:
         chunk_overlap=settings.chunk_overlap
     )
     for d in docs:
-        if len(d.text) <= 400:
-            chunks.append(Chunk(doc_id=d.id, chunk_id=f"{d.id}::c0",
-                                text=d.text, meta={"source": d.source, "title": d.title}))
+
+        text = (d.text or "").strip()
+        if not text:
+            continue
+
+        # Atomic short entries
+        if len(text.split()) <= settings.short_entry_words:
+            pieces = [text]
         else:
-            for j, piece in enumerate(splitter.split_text(d.text)):
-                chunks.append(Chunk(doc_id=d.id, chunk_id=f"{d.id}::c{j}",
-                                    text=piece, meta={"source": d.source, "title": d.title}))
+            print(text)
+            pieces = [p for p in splitter.split_text(text) if p and p.strip()]
+        
+        # Base meta
+        base_meta = {}
+        if hasattr(d, "meta") and isinstance(d.meta, dict):
+            base_meta.update(d.meta)
+        if getattr(d, "source", None) is not None:
+            base_meta.setdefault("source", d.source)
+
+        for j, piece in enumerate(pieces):
+            meta = dict(base_meta)
+            meta.update({
+                "chunk_index": j,
+                "total_chunks": len(pieces),
+                "word_count": len(piece.split()),
+            })
+            chunks.append(
+                Chunk(
+                    doc_id=d.id,
+                    chunk_id=f"{d.id}::c{j}",
+                    text=piece,
+                    meta=meta,
+                )
+            )
     return chunks

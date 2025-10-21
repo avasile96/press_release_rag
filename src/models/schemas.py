@@ -7,7 +7,6 @@ Data contracts for clarity
 
 class Document(BaseModel):
     id: str
-    title: Optional[str] = None
     text: str
     source: Optional[str] = None
     date: Optional[str] = None
