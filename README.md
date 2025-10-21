@@ -191,46 +191,8 @@ docker compose down -v
 
 ## Notable Implementation Details
 
-- FAISS index is built with `normalize_L2=True`, making inner product equivalent to cosine similarity.
-- For LangChain ≥ 0.2, retrievers implement the `Runnable` interface; the UI calls `retriever.invoke(question)`.
 - On Apple Silicon, FAISS-CPU is used; FAISS GPU is not available with Metal.
 - Docker Compose provides a private network so the app reaches Ollama at `http://ollama:11434`. Models persist in the named volume `ollama:/root/.ollama`.
-
----
-
-## Troubleshooting
-
-**Connection refused to 11434**
-```bash
-# Local: ensure Ollama is running
-ollama serve
-
-# Docker: confirm the app targets the service name
-echo $OLLAMA_HOST  # should be http://ollama:11434 inside the app container
-```
-
-**ModuleNotFoundError: langchain.docstore.document**
-```python
-# Use FAISS.from_texts(...) instead of importing Document from langchain.docstore
-# or import Document from:
-from langchain_core.documents import Document
-```
-
-**ModuleNotFoundError: src when running scripts**
-```bash
-# Run from repository root
-python -m scripts.ingest
-# For Streamlit
-PYTHONPATH=$(pwd) python -m streamlit run app/streamlit_app.py
-```
-
-**High Docker memory when idle**
-```yaml
-# docker-compose.yml (ollama service)
-environment:
-  OLLAMA_KEEP_ALIVE: "30s"
-  OLLAMA_MAX_LOADED_MODELS: "1"
-```
 
 ---
 
